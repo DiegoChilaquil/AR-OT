@@ -45,14 +45,14 @@ String tempPath = "temperatura";
 
 String parentPath;
 
-int wifi_on = D7;
+//int wifi_on = D7;
 
 void setup() 
 {
 
     Serial.begin(115200);
-    //timeClient.begin();
-    pinMode(wifi_on, INPUT );
+    timeClient.begin();
+    //pinMode(wifi_on, INPUT);
     initWifi();
     Firebase.begin(&config, &auth);
     
@@ -75,22 +75,35 @@ void setup()
 
   // Update database path
     databasePath = "/UsersData/" + uid + "/lecturas";
-
+      pinMode(12, INPUT_PULLUP);
+      pinMode(BUILTIN_LED, OUTPUT);
+      digitalWrite(BUILTIN_LED, HIGH);
 }
 
 void loop() {
 
-  FirebaseJson json;
-  if (Firebase.ready() && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0))
-    {
-     parentPath= databasePath + "/";
+  int swval = digitalRead(12);
+  if (swval != HIGH) 
+  {
+      FirebaseJson json;
+      if (Firebase.ready() && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0))
+        {
+        parentPath= databasePath + "/";
 
-    sendDataPrevMillis = millis();
-    json.set(tempPath.c_str(), String(temperatura()));
-    Serial.printf("Set json... %s\n", Firebase.RTDB.set(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
+        sendDataPrevMillis = millis();
+        json.set(tempPath.c_str(), String(temperatura()));
+        Serial.printf("Set json... %s\n", Firebase.RTDB.set(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
 
     }
-
+  }
+  else
+  {
+    Serial.println(swval);
+    digitalWrite(BUILTIN_LED, HIGH);
+    Serial.println("datos no enviados a firebase")
+    delay(1000);
+  }
+  
 }
 
 void initWifi()
