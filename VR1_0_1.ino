@@ -99,7 +99,7 @@ void loop() {
   else
   {
     Serial.println(swval);
-    digitalWrite(BUILTIN_LED, HIGH);
+    digitalWrite(BUILTIN_LED, LOW);
     Serial.println("datos no enviados a firebase")
     delay(1000);
   }
