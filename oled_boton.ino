@@ -47,6 +47,8 @@ void loop()
 
       if (*val == HIGH)
       {
+        display.clearDisplay();
+        display.display();
         digitalWrite(2, LOW);
         Serial.println(*val);
         display.setTextSize(1);
@@ -57,6 +59,8 @@ void loop()
         delay(10);
       }
       else{
+        display.clearDisplay();
+        display.display();
         digitalWrite(2, HIGH);
         Serial.println(*val);
         display.setTextSize(1);
