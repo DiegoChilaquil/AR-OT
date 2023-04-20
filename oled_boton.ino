@@ -41,34 +41,31 @@ void setup() {
 }
 void loop() 
 {
-  
+  display.clearDisplay();
   int sensorval = digitalRead(12);
   volatile int* val = &sensorval;
 
       if (*val == HIGH)
       {
-        display.clearDisplay();
-        display.display();
-        digitalWrite(2, LOW);
-        Serial.println(*val);
-        display.setTextSize(1);
-        display.setTextColor(WHITE);
-        //display.setCursor(75, 10); no hay necesidad que posicionar el cursor
-        display.print("Boton no presionado");
-        display.display();
-        delay(10);
-      }
-      else{
-        display.clearDisplay();
-        display.display();
+        
         digitalWrite(2, HIGH);
         Serial.println(*val);
         display.setTextSize(1);
         display.setTextColor(WHITE);
-        //display.setCursor(75, 10); no hay necesidad que posicionar el cursor
+        display.setCursor(0, 10); //no hay necesidad que posicionar el cursor
+        display.print("Boton no presionado");
+        display.display();
+        delay(1000);
+      }
+      else{
+        digitalWrite(2, LOW);
+        Serial.println(*val);
+        display.setTextSize(1);
+        display.setTextColor(WHITE);
+        display.setCursor(0, 10);// no hay necesidad que posicionar el cursor
         display.print("Boton presionado");
         display.display();
-        delay(10);
+        delay(1000);
         
       }
 
