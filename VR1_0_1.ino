@@ -45,14 +45,13 @@ String tempPath = "temperatura";
 
 String parentPath;
 
-//int wifi_on = D7;
 
 void setup() 
 {
 
     Serial.begin(115200);
-    timeClient.begin();
-    //pinMode(wifi_on, INPUT);
+    //timeClient.begin();
+
     initWifi();
     Firebase.begin(&config, &auth);
     
@@ -75,16 +74,19 @@ void setup()
 
   // Update database path
     databasePath = "/UsersData/" + uid + "/lecturas";
-      pinMode(12, INPUT_PULLUP);
-      pinMode(BUILTIN_LED, OUTPUT);
+      pinMode(GPIO_ID_PIN(12), INPUT_PULLUP);
+      pinMode(GPIO_ID_PIN(2), OUTPUT);
       digitalWrite(BUILTIN_LED, HIGH);
 }
 
 void loop() {
 
   int swval = digitalRead(12);
-  if (swval != HIGH) 
-  {
+  Serial.println(temperatura());
+  digitalWrite(BUILTIN_LED,HIGH);
+  if (swval == LOW) 
+  { 
+      digitalWrite(BUILTIN_LED, LOW);
       FirebaseJson json;
       if (Firebase.ready() && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0))
         {
@@ -99,9 +101,8 @@ void loop() {
   else
   {
     Serial.println(swval);
-    digitalWrite(BUILTIN_LED, LOW);
-    Serial.println("datos no enviados a firebase")
-    delay(1000);
+    digitalWrite(BUILTIN_LED, HIGH);
+    Serial.println("datos no enviados a firebase");
   }
   
 }
@@ -156,7 +157,6 @@ void initWifi()
 
 float temperatura()
 {
-  
   int average = 0;
   for (int i=0; i < 10; i++) {
   average = average + analogRead(A0);
